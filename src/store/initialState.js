@@ -1,6 +1,6 @@
 const initialState = {
   auth: {
-    isAuth: localStorage.getItem("loan-system-token"),
+    isAuth: localStorage.getItem("loan-system-token") || null,
     currentUser: {}
   }
 };

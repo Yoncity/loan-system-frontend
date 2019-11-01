@@ -1,0 +1,35 @@
+@import "../../styles/color";
+
+.main-content {
+  background-color: $surface;
+  min-height: 100vh;
+
+  .container {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0px 0px 2px #aaa;
+    .fields-title {
+      padding: 15px 20px;
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+      background: #eee;
+      border: none;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+}
+
+.error-message {
+  color: red;
+}
+
+.success-message {
+  color: green;
+}
+
+.loading-message {
+  color: blue;
+}

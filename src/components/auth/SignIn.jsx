@@ -1,9 +1,24 @@
 import React, { Component } from "react";
 import "./SignIn.scss";
 import { connect } from "react-redux";
-import { authenticate } from "../../actions/authAction";
+import authenticate from "../../actions/authAction";
 import { Redirect } from "react-router-dom";
 import Loader from "../Loader/Loader";
+import { USERNAME_ERROR, PASSWORD_ERROR } from "../../constants/error";
+
+export const validateForm = (username, password) => {
+  try {
+    if (username == null || username === "") {
+      throw new Error(USERNAME_ERROR);
+    }
+    if (password == null || password === "") {
+      throw new Error(PASSWORD_ERROR);
+    }
+    return true;
+  } catch (error) {
+    return error.message;
+  }
+};
 
 class Login extends Component {
   state = {
@@ -19,10 +34,9 @@ class Login extends Component {
   signIn = () => {
     const { username, password } = this.state;
     const { authenticate } = this.props;
-    if (username == null) return;
-    if (password == null) return;
-
-    authenticate({ username, password });
+    if (validateForm(username, password)) {
+      authenticate({ username, password });
+    }
   };
 
   renderSignInFields = (display, error) => {
@@ -46,7 +60,12 @@ class Login extends Component {
               placeholder="Password"
               onChange={this.getFormInput}
             />
-            <input type="submit" onClick={this.signIn} value="Sign In" />
+            <input
+              type="submit"
+              id="sign-in-button"
+              onClick={this.signIn}
+              value="Sign In"
+            />
           </form>
         </div>
       </div>

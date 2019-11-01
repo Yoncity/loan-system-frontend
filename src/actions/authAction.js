@@ -1,19 +1,20 @@
 import * as types from "../actionTypes/authTypes";
+import axios from "axios";
 
-const authStarted = () => ({
+export const authStarted = () => ({
   type: types.AUTH_STARTED
 });
 
-const setNotAuth = () => ({
+export const setNotAuth = () => ({
   type: types.SET_NOT_AUTH
 });
 
-const setAuthUser = (user, token) => ({
+export const setAuthUser = (user, token) => ({
   type: types.SET_AUTH_USER,
   payload: { user, token }
 });
 
-const authFailed = error => ({
+export const authFailed = error => ({
   type: types.AUTH_FAILED,
   payload: { error }
 });
@@ -23,11 +24,35 @@ export const signOut = () => async dispatch => {
   dispatch(setNotAuth());
 };
 
-export const authenticate = ({ username, password }) => async dispatch => {
+const authenticate = ({ username, password }) => async dispatch => {
   dispatch(authStarted());
   try {
-    dispatch(setAuthUser(null, null));
+    const url = `http://localhost:3000/api/v1/auth/login`;
+    console.log(url);
+    const res = await axios.request({
+      method: "POST",
+      url,
+      data: {
+        username,
+        password
+      },
+      responseType: "json",
+      transformResponse: [
+        data => {
+          if (data.status !== 200) throw new Error(data.message);
+          return data;
+        }
+      ]
+    });
+
+    const { user, token } = res.data;
+    if (user) {
+      localStorage.setItem("loan-system-token", token);
+      dispatch(setAuthUser(res.data.user, res.data.token));
+    }
   } catch (error) {
-    dispatch(authFailed(error));
+    dispatch(authFailed(error.message));
   }
 };
+
+export default authenticate;

@@ -1,0 +1,49 @@
+@import "../../../styles/_color";
+
+table {
+  width: 100%;
+
+  border-radius: 3px;
+  box-shadow: 0px 0px 2px #aaa;
+}
+table tr {
+  border: none;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+
+  &:first-child {
+    text-align: center;
+    font-weight: bold;
+    background: $secondary;
+    color: #fff;
+    td {
+      border-bottom: 1px solid #ddd;
+      font-size: 20px;
+    }
+  }
+
+  td {
+    font-size: 14px;
+    border-right: 1px solid #ddd;
+  }
+
+  &:nth-child(even) {
+    background: #eee;
+  }
+
+  &:nth-child(2) {
+    text-align: center;
+    background: $lightSecondary;
+    td {
+      font-size: 16px;
+    }
+  }
+
+  .edit-borrower-info {
+    &:hover {
+      background: $secondary;
+      color: #fff;
+      transition: 0.3s ease-in-out;
+    }
+  }
+}

@@ -1,0 +1,64 @@
+@import "../../styles/_color";
+
+#update-loan {
+  padding: 10px;
+
+  input {
+    display: inline-block;
+    width: 25%;
+    margin: 10px;
+  }
+  input[type="submit"] {
+    width: 10%;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  #search-borrower {
+    padding: 30px;
+    text-align: center;
+
+    input[type="submit"] {
+      border: 1px solid $registerButton;
+      background: $registerButton;
+    }
+    p {
+      margin: 0;
+      padding: 10px;
+      display: inline-block;
+    }
+  }
+
+  #found-borrower {
+    padding: 30px;
+    text-align: center;
+
+    input[type="submit"] {
+      border: 1px solid $adminButton;
+      background: $adminButton;
+    }
+    #paid-button {
+      border: 1px solid $dangerButton;
+      background: $dangerButton;
+    }
+    #borrower-info,
+    .loan-info {
+      p {
+        display: inline-block;
+        padding: 15px;
+        border-right: 1px solid $primary;
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+    #no-borrower {
+      font-size: 40px;
+      font-weight: bold;
+      color: #aaa;
+    }
+  }
+}

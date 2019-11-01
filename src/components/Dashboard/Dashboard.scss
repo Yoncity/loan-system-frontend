@@ -1,0 +1,41 @@
+#dashboard {
+  padding: 10px;
+  #capital {
+    padding: 30px;
+
+    p {
+      margin: 0px;
+    }
+    #capital-title {
+      font-size: 20px;
+      padding: 10px;
+      display: inline-block;
+      vertical-align: top;
+      box-sizing: border-box;
+    }
+    #capital-value {
+      float: right;
+      margin-top: -10px;
+      padding: 10px;
+      font-size: 40px;
+      box-sizing: border-box;
+    }
+  }
+
+  #updateCapital {
+    input {
+      display: block;
+      width: 30%;
+      margin: 10px 30px;
+    }
+    input[type="submit"] {
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      border: 1px solid rgb(7, 106, 255);
+      border-radius: 3px;
+      background: rgb(7, 106, 255);
+      cursor: pointer;
+    }
+  }
+}
