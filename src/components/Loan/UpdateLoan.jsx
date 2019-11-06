@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import getBorrowers from "../../actions/getBorrowersAction";
 import "./UpdateLoan.scss";
 import { updateBorrower } from "../../actions/updateBorrowerAction";
 
@@ -21,20 +22,23 @@ class UpdateLoan extends Component {
   };
 
   searchBorrower = () => {
-    const { borrowers } = this.props;
+    const { borrowers, getBorrowers } = this.props;
     const { searchID, searchPhone } = this.state;
 
-    // Validation Happens for SearchFields
-    const borrower = borrowers.find(
-      b =>
-        b.borrowerInfo.idNumber === searchID &&
-        b.borrowerInfo.phone === searchPhone
-    );
-
-    if (borrower) {
-      this.setState({ borrower });
+    if (borrowers) {
+      // Validation Happens for SearchFields
+      const borrower = borrowers.find(
+        b =>
+          b.borrowerInfo.idNumber === searchID &&
+          b.borrowerInfo.phone === searchPhone
+      );
+      if (borrower && borrower.paid === false) {
+        this.setState({ borrower });
+      } else {
+        this.setState({ borrower: "" });
+      }
     } else {
-      this.setState({ borrower: "" });
+      getBorrowers();
     }
   };
 
@@ -62,7 +66,7 @@ class UpdateLoan extends Component {
     const { updateBorrower } = this.props;
     const { borrower } = this.state;
 
-    updateBorrower({}, borrower.slug);
+    updateBorrower({ paid: true }, borrower.slug);
   };
 
   renderFoundBorrower = borrower => {
@@ -88,7 +92,7 @@ class UpdateLoan extends Component {
           {status}
           <div id="borrower-info">
             <p>
-              Name: {borrowerInfo.firstname} {borrowerInfo.firstname}
+              Name: {borrowerInfo.firstname} {borrowerInfo.lastname}
             </p>
             <p>Phone: {borrowerInfo.phone}</p>
             <p>Address: {borrowerInfo.address}</p>
@@ -140,7 +144,8 @@ const mapState = ({
 });
 
 const mapDispatch = dispatch => ({
-  updateBorrower: (borrower, slug) => dispatch(updateBorrower(borrower, slug))
+  updateBorrower: (borrower, slug) => dispatch(updateBorrower(borrower, slug)),
+  getBorrowers: () => dispatch(getBorrowers())
 });
 
 export default connect(

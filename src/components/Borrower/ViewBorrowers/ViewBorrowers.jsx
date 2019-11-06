@@ -5,17 +5,63 @@ import getBorrowers from "../../../actions/getBorrowersAction";
 import Loader from "../../Loader/Loader";
 
 class ViewBorrowers extends Component {
+  constructor() {
+    super();
+    this.state = {
+      showPaid: false,
+      showUnPaid: true,
+      showAll: false
+    };
+  }
+
   componentWillMount() {
     const { getBorrowers } = this.props;
     getBorrowers();
   }
 
-  editBorrower = slug => {};
-
-  renderViewBorrowers = () => {
+  renderPaidBorrowers = () => {
     const { borrowers } = this.props;
+    const paidBorrowers = borrowers.filter(b => b.paid === true);
+    return this.renderViewBorrowers(paidBorrowers);
+  };
+
+  renderAllBorrowers = () => {
+    const { borrowers } = this.props;
+    return this.renderViewBorrowers(borrowers);
+  };
+
+  renderUnPaidBorrowers = () => {
+    const { borrowers } = this.props;
+    const unPaidBorrowers = borrowers.filter(b => b.paid === false);
+    return this.renderViewBorrowers(unPaidBorrowers);
+  };
+
+  renderViewBorrowers = borrowers => {
+    const { editBorrower } = this.props;
     return (
       <React.Fragment>
+        <button
+          onClick={() =>
+            this.setState({ showPaid: false, showUnPaid: true, showAll: false })
+          }
+        >
+          Show Unpaid Borrowers
+        </button>
+        <button
+          onClick={() =>
+            this.setState({ showPaid: true, showUnPaid: false, showAll: false })
+          }
+        >
+          Show Paid Borrowers
+        </button>
+
+        <button
+          onClick={() =>
+            this.setState({ showPaid: false, showUnPaid: false, showAll: true })
+          }
+        >
+          Show All Borrowers
+        </button>
         <table cellSpacing="0" cellPadding="10" rules="none">
           <tr>
             <td id="name-field" colSpan="2">
@@ -44,35 +90,30 @@ class ViewBorrowers extends Component {
             <tr>
               <td
                 className="edit-borrower-info"
-                onClick={this.editBorrower(info.slug)}
+                onClick={() => editBorrower(info.slug)}
               >
                 {info.borrowerInfo.firstname}
               </td>
               <td
                 className="edit-borrower-info"
-                onClick={this.editBorrower(info.slug)}
+                onClick={() => editBorrower(info.slug)}
               >
                 {info.borrowerInfo.lastname}
               </td>
               <td
                 className="edit-borrower-info"
-                onClick={this.editBorrower(info.slug)}
+                onClick={() => editBorrower(info.slug)}
               >
                 {info.borrowerInfo.address}
               </td>
               <td
                 className="edit-borrower-info"
-                onClick={this.editBorrower(info.slug)}
+                onClick={() => editBorrower(info.slug)}
               >
                 {info.borrowerInfo.phone}
               </td>
               <td>{info.loanInfo.amountBorrowed}</td>
-              <td
-                className="edit-borrower-info"
-                onClick={this.editBorrower(info.slug)}
-              >
-                {info.loanInfo.amountReturn}
-              </td>
+              <td>{info.loanInfo.amountReturn}</td>
               <td>{info.loanInfo.interestRate}%</td>
               <td>{info.loanInfo.returnDate}</td>
             </tr>
@@ -84,6 +125,7 @@ class ViewBorrowers extends Component {
 
   render() {
     const { loading, error, borrowers } = this.props;
+    const { showPaid, showUnPaid, showAll } = this.state;
     if (loading) {
       return <Loader />;
     }
@@ -91,7 +133,15 @@ class ViewBorrowers extends Component {
       return <div>Error....{error}</div>;
     }
     if (borrowers) {
-      return this.renderViewBorrowers();
+      if (showPaid) {
+        return this.renderPaidBorrowers();
+      }
+      if (showUnPaid) {
+        return this.renderUnPaidBorrowers();
+      }
+      if (showAll) {
+        return this.renderAllBorrowers();
+      }
     }
     return null;
   }

@@ -26,8 +26,8 @@ describe("Form Validator Test", () => {
 
   describe("Should Fail When Passing Malformed Data", () => {
     beforeEach(() => {
-      borrowerInfo.borrowerInfo.firstName = "Yonatan";
-      borrowerInfo.borrowerInfo.lastName = "Dawit";
+      borrowerInfo.borrowerInfo.firstname = "Yonatan";
+      borrowerInfo.borrowerInfo.lastname = "Dawit";
       borrowerInfo.borrowerInfo.phone = "0787275358";
       borrowerInfo.borrowerInfo.address = "Mengo";
       borrowerInfo.borrowerInfo.idNumber = "12345678";
@@ -39,13 +39,13 @@ describe("Form Validator Test", () => {
     });
 
     it("Should Fail When Passing Numbers As Names For FIRST_NAME", () => {
-      borrowerInfo.borrowerInfo.firstName = "Yonatan123";
+      borrowerInfo.borrowerInfo.firstname = "Yonatan123";
       const response = formValidator(borrowerInfo);
       expect(response).toBe(errors.BAD_FIRST_NAME);
     });
 
     it("Should Fail When Passing Numbers As Names For LAST_NAME", () => {
-      borrowerInfo.borrowerInfo.lastName = "Dawit12";
+      borrowerInfo.borrowerInfo.lastname = "Dawit12";
       const response = formValidator(borrowerInfo);
       expect(response).toBe(errors.BAD_LAST_NAME);
     });
