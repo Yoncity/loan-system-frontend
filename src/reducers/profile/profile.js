@@ -1,15 +1,16 @@
-import * as types from "../../actionTypes/profile/profileTypes";
+import * as types from '../../actionTypes/profile/profileTypes';
+import initialState from '../../store/initialState';
 
-const profile = (state = {}, { payload, type }) => {
+const profile = (state = initialState.profile, { payload, type }) => {
   switch (type) {
     case types.GET_PROFILE_STARTED:
-      return { loading: true, error: null, profile: null };
+      return { ...state, loading: true };
 
     case types.GET_PROFILE_SUCCESS:
-      return { loading: false, profile: payload.profile };
+      return { ...state, loading: false, profile: payload.profile };
 
     case types.GET_PROFILE_ERROR:
-      return { loading: false, error: payload.error };
+      return { ...state, loading: false, error: payload.error };
 
     default:
       return state;

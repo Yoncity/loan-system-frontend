@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import "./ViewBorrowers.scss";
-import { connect } from "react-redux";
-import getBorrowers from "../../../actions/getBorrowersAction";
-import Loader from "../../Loader/Loader";
+import React, { Component } from 'react';
+import './ViewBorrowers.scss';
+import { connect } from 'react-redux';
+import getBorrowers from '../../../actions/getBorrowersAction';
+import Loader from '../../Loader/Loader';
 
 class ViewBorrowers extends Component {
   constructor() {
@@ -10,7 +10,7 @@ class ViewBorrowers extends Component {
     this.state = {
       showPaid: false,
       showUnPaid: true,
-      showAll: false
+      showAll: false,
     };
   }
 
@@ -67,7 +67,7 @@ class ViewBorrowers extends Component {
             <td id="name-field" colSpan="2">
               Full Name
             </td>
-            <td id="contact-field" colSpan="2">
+            <td id="contact-field" colSpan="3">
               Contact
             </td>
             <td id="loan-field" colSpan="4">
@@ -78,6 +78,7 @@ class ViewBorrowers extends Component {
           <tr>
             <td>First Name</td>
             <td>Last Name</td>
+            <td>ID Number</td>
             <td>Address</td>
             <td>Phone</td>
             <td>Amount Borrowed</td>
@@ -100,6 +101,7 @@ class ViewBorrowers extends Component {
               >
                 {info.borrowerInfo.lastname}
               </td>
+              <td>{info.borrowerInfo.idNumber}</td>
               <td
                 className="edit-borrower-info"
                 onClick={() => editBorrower(info.slug)}
@@ -150,14 +152,14 @@ class ViewBorrowers extends Component {
 const mapState = ({ getBorrowers: { loading, error, borrowers } }) => ({
   loading,
   error,
-  borrowers
+  borrowers,
 });
 
 const mapDispatch = dispatch => ({
-  getBorrowers: () => dispatch(getBorrowers())
+  getBorrowers: () => dispatch(getBorrowers()),
 });
 
 export default connect(
   mapState,
-  mapDispatch
+  mapDispatch,
 )(ViewBorrowers);

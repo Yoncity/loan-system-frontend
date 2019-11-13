@@ -1,13 +1,13 @@
-import * as errors from "../../../constants/error";
+import * as errors from '../../../constants/error';
 
 const hasNoData = data => {
-  return data === null || data === "";
+  return data === null || data === '';
 };
 
-const formValidator = borrowerData => {
+const formValidator = (borrowerData, capital) => {
   const {
     borrowerInfo: { firstname, lastname, phone, address, idNumber },
-    loanInfo: { amountBorrowed, interestRate, security, returnDate }
+    loanInfo: { amountBorrowed, interestRate, security, returnDate },
   } = borrowerData;
 
   try {
@@ -42,14 +42,11 @@ const formValidator = borrowerData => {
       throw new Error(errors.BAD_PHONE);
     }
 
-    // Must not borrower more than capital and less than 30000
-
     if (amountBorrowed < 30000) {
       throw new Error(errors.AMOUNT_BORROWED_BELOW_LIMIT);
+    } else if (amountBorrowed > capital) {
+      throw new Error(errors.AMOUNT_BORROWED_ABOVE_LIMIT);
     }
-    // else if (amountBorrowed > "capital") {
-    //   throw new Error(errors.AMOUNT_BORROWED_ABOVE_LIMIT);
-    // }
 
     let interestPattern = /[A-Za-z]/;
     if (interestPattern.test(interestRate)) {

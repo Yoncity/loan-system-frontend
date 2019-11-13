@@ -1,10 +1,11 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { updateBorrower } from "../../../actions/updateBorrowerAction";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { updateBorrower } from '../../../actions/updateBorrowerAction';
+import formValidator from './formValidator';
 
 class EditBorrower extends Component {
   state = {
-    borrowerInfo: {}
+    borrowerInfo: {},
   };
 
   getFormFields = ({ target: { name, value } }) => {
@@ -34,9 +35,9 @@ class EditBorrower extends Component {
         <form onSubmit={e => e.preventDefault()}>
           <div className="container" id="name_container">
             <p className="fields-title">
-              Full Name{" "}
-              <span style={{ color: "red" }}>
-                {">>"} (REQUIRED FIELDS) {"<<"}
+              Full Name{' '}
+              <span style={{ color: 'red' }}>
+                {'>>'} (REQUIRED FIELDS) {'<<'}
               </span>
             </p>
             <input
@@ -61,9 +62,9 @@ class EditBorrower extends Component {
 
           <div className="container" id="contact_container">
             <p className="fields-title">
-              Contact{" "}
-              <span style={{ color: "red" }}>
-                {">>"} (REQUIRED FIELDS) {"<<"}
+              Contact{' '}
+              <span style={{ color: 'red' }}>
+                {'>>'} (REQUIRED FIELDS) {'<<'}
               </span>
             </p>
             <input
@@ -94,8 +95,14 @@ class EditBorrower extends Component {
   updateBorrowerInfo = () => {
     const { updateBorrower, slug, addBorrower } = this.props;
     const { borrowerInfo } = this.state;
-    updateBorrower({ borrowerInfo }, slug);
-    addBorrower();
+    const proceed = formValidator(borrowerInfo);
+
+    if (proceed === true) {
+      updateBorrower({ borrowerInfo }, slug);
+      addBorrower();
+    } else {
+      alert(proceed);
+    }
   };
 
   render() {
@@ -109,14 +116,14 @@ class EditBorrower extends Component {
 }
 
 const mapState = ({ getBorrowers: { borrowers } }) => ({
-  borrowers
+  borrowers,
 });
 
 const mapDispatch = dispatch => ({
-  updateBorrower: (borrower, slug) => dispatch(updateBorrower(borrower, slug))
+  updateBorrower: (borrower, slug) => dispatch(updateBorrower(borrower, slug)),
 });
 
 export default connect(
   mapState,
-  mapDispatch
+  mapDispatch,
 )(EditBorrower);
