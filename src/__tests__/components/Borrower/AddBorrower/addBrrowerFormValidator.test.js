@@ -1,5 +1,5 @@
-import formValidator from '../../../components/Borrower/AddBorrower/formValidator';
-import * as errors from '../../../constants/error';
+import formValidator from '../../../../components/Borrower/AddBorrower/formValidator';
+import * as errors from '../../../../constants/error';
 
 describe('Form Validator Test', () => {
   let borrowerInfo = {

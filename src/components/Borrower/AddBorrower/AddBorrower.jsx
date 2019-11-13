@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { WRONG_RETURN_DATE } from '../../../constants/error';
+import { WRONG_RETURN_DATE, EMPTY_DATA } from '../../../constants/error';
 import formValidator from './formValidator';
 import { connect } from 'react-redux';
 import addBorrower, {
@@ -7,6 +7,37 @@ import addBorrower, {
 } from '../../../actions/addBorrowerAction';
 import Loader from '../../Loader/Loader';
 import getProfile from '../../../actions/profile/profileActions';
+
+export const calculateInterest = loanInfo => {
+  if (loanInfo === null || Object.keys(loanInfo).length === 0) {
+    return new Error(EMPTY_DATA).message;
+  }
+  const { interestRate, amountBorrowed, returnDate } = loanInfo;
+  let currentDate = new Date();
+  let returnDate2 = new Date(returnDate);
+
+  let months;
+  if (currentDate.getFullYear() === returnDate2.getFullYear()) {
+    if (returnDate2 > currentDate) {
+      months = returnDate2.getMonth() - currentDate.getMonth();
+    }
+  } else if (returnDate2.getFullYear() > currentDate.getFullYear()) {
+    const diff = returnDate2.getFullYear() - currentDate.getFullYear();
+    months = 12 * diff + returnDate2.getMonth() - currentDate.getMonth();
+  } else return new Error(WRONG_RETURN_DATE);
+
+  return (interestRate / 100) * amountBorrowed * months;
+};
+
+export const calculateAmountReturn = loanInfo => {
+  if (loanInfo === null || Object.keys(loanInfo).length === 0) {
+    return new Error(EMPTY_DATA).message;
+  }
+  const { amountBorrowed } = loanInfo;
+  let interest = calculateInterest(loanInfo);
+  interest += Number(amountBorrowed);
+  return interest;
+};
 
 class AddBorrower extends Component {
   constructor() {
@@ -55,30 +86,11 @@ class AddBorrower extends Component {
     });
   };
 
-  calculateAmountReturn = (currentDate, returnDate) => {
-    let months;
-    if (currentDate.getFullYear() === returnDate.getFullYear()) {
-      if (returnDate > currentDate) {
-        months = returnDate.getMonth() - currentDate.getMonth();
-      }
-    } else if (returnDate.getFullYear() > currentDate.getFullYear()) {
-      const diff = returnDate.getFullYear() - currentDate.getFullYear();
-      months = 12 * diff + returnDate.getMonth() - currentDate.getMonth();
-    } else return new Error(WRONG_RETURN_DATE);
-
-    const { interestRate, amountBorrowed } = this.state.loanInfo;
-    return (
-      (interestRate / 100) * amountBorrowed * months + Number(amountBorrowed)
-    );
-  };
-
   saveBorrowerInfo = () => {
     const { addBorrower, capital } = this.props;
     const { borrowerInfo, loanInfo } = this.state;
-    let currentDate = new Date();
-    let returnDate = new Date(loanInfo.returnDate);
 
-    const amountReturn = this.calculateAmountReturn(currentDate, returnDate);
+    const amountReturn = calculateAmountReturn(loanInfo);
 
     loanInfo.amountReturn = amountReturn;
     this.setState({ borrowerInfo, loanInfo });
