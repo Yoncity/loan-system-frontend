@@ -1,45 +1,52 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import getBorrowers from "../../actions/getBorrowersAction";
-import "./UpdateLoan.scss";
-import { updateBorrower } from "../../actions/updateBorrowerAction";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import getBorrowers from '../../actions/getBorrowersAction';
+import './UpdateLoan.scss';
+import { updateBorrower } from '../../actions/updateBorrowerAction';
+import formValidator from './formValidator';
 
 class UpdateLoan extends Component {
   state = {
     searchID: null,
     searchPhone: null,
-    borrower: null
+    borrower: null,
   };
+
+  componentDidMount() {
+    const { borrowers, getBorrowers } = this.props;
+    if (!borrowers) {
+      getBorrowers();
+    }
+  }
 
   getFieldsInput = ({ target: { name, value } }) => {
     if (
-      name === "searchID" ||
-      name === "searchPhone" ||
-      name === "amountReturn"
+      name === 'searchID' ||
+      name === 'searchPhone' ||
+      name === 'amountReturn'
     ) {
       this.setState({ [name]: value });
     }
   };
 
   searchBorrower = () => {
-    const { borrowers, getBorrowers } = this.props;
+    const { borrowers } = this.props;
     const { searchID, searchPhone } = this.state;
 
-    if (borrowers) {
-      // Validation Happens for SearchFields
+    const proceed = formValidator({ idNumber: searchID, phone: searchPhone });
+
+    if (proceed === true) {
       const borrower = borrowers.find(
         b =>
           b.borrowerInfo.idNumber === searchID &&
-          b.borrowerInfo.phone === searchPhone
+          b.borrowerInfo.phone === searchPhone,
       );
       if (borrower && borrower.paid === false) {
         this.setState({ borrower });
       } else {
-        this.setState({ borrower: "" });
+        this.setState({ borrower: '' });
       }
-    } else {
-      getBorrowers();
-    }
+    } else alert(proceed);
   };
 
   renderSearchFields = () => {
@@ -49,7 +56,7 @@ class UpdateLoan extends Component {
           type="text"
           name="searchID"
           onChange={this.getFieldsInput}
-          placeholder="Search ID"
+          placeholder="ID Number"
         />
         <input
           type="text"
@@ -115,7 +122,7 @@ class UpdateLoan extends Component {
       let status;
       if (borrower === null) {
         status = <p id="no-borrower">Use Fields Above To Search A Borrower</p>;
-      } else if (borrower === "") {
+      } else if (borrower === '') {
         status = <p id="no-borrower">No Borrower Found</p>;
       }
       return <div id="found-borrower">{status}</div>;
@@ -135,20 +142,20 @@ class UpdateLoan extends Component {
 
 const mapState = ({
   getBorrowers: { borrowers },
-  updateBorrower: { loading, error, success }
+  updateBorrower: { loading, error, success },
 }) => ({
   borrowers,
   loading,
   error,
-  success
+  success,
 });
 
 const mapDispatch = dispatch => ({
   updateBorrower: (borrower, slug) => dispatch(updateBorrower(borrower, slug)),
-  getBorrowers: () => dispatch(getBorrowers())
+  getBorrowers: () => dispatch(getBorrowers()),
 });
 
 export default connect(
   mapState,
-  mapDispatch
+  mapDispatch,
 )(UpdateLoan);
